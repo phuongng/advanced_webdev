@@ -22,6 +22,7 @@ function CaregiverProfile() {
             .then((response) => {
                 console.log("API Response:", response.data);
                 setCaregiverData(response.data);
+                setLoading(false);
             })
             .catch((error) => {
                 console.error('API Error:', error);
