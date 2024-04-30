@@ -17,7 +17,7 @@ function CaregiverProfile() {
     useEffect(() => {
         setLoading(true);
         setError(null);
-        // Fetch the caregiver data from your API based on name
+        // Fetch the caregiver data from API based on caregiver name
         api.get(`/caregiver?name=${fullname}`)
             .then((response) => {
                 console.log("API Response:", response.data);
@@ -29,10 +29,7 @@ function CaregiverProfile() {
                 setError(error);
                 setLoading(false);
             });
-    }, [fullname]); // Dependency on fullname
-
-    console.log("Search:", fullname);
-    console.log("Caregiver Data:", caregiverData);
+    }, [fullname]);
     
     if (loading) {
         return <div>Loading...</div>;
@@ -52,12 +49,17 @@ function CaregiverProfile() {
         title: caregiverTitle,
         rating,
         reviews,
-        total_patients: totalPatients,
+        //total_patients: totalPatients,
         year_experience: yearsExperience,
-        about_me: aboutMe,
-        services_offered: servicesOffered,
-        image // Assuming this property exists for the caregiver's image
+        //about_me: aboutMe,
+        skills: servicesOffered,
+        //image
     } = caregiverData.caregiver;
+
+    //TODO add these to the caregiver?
+    var totalPatients;
+    var aboutMe;
+    var image;
 
     return (
         <>
