@@ -6,17 +6,6 @@ import Calendar from "../components/calendar";
 import TimePicker from '../components/timepicker';
 import api from '../../api.js';
 
-function handleConfirmBooking(caregiverName) {
-    api.post(`/caregiver/increment-patients/${caregiverName}`)
-         .then(response => {
-             console.log('Patient count incremented:', response.data);
-             //TODO: Handle further actions after successful booking confirmation
-         })
-         .catch(error => {
-             console.error('Failed to increment patient count:', error);
-         });
-}
-
 function useQuery() {
     return new URLSearchParams(useLocation().search);
 }
@@ -40,6 +29,48 @@ function Booking() {
         ]
     });
 
+	const handleConfirmBooking = () => {
+		// Define all possible services and initialize them to false
+		const servicesRequired = {
+			"Personal Care Assistance": false,
+			"Mobility Aid": false,
+			"Errands": false,
+			"Medication Management": false,
+			"Catheter Care": false,
+			"Emotional Support": false
+		};
+	
+		// Update the required services to true based on user selection
+		bookingConfirmation.service_required.forEach(service => {
+			if (servicesRequired.hasOwnProperty(service)) {
+				servicesRequired[service] = true;
+			}
+		});
+	
+		// Parse the schedule to extract date and time
+		const [datePart, timePart] = bookingConfirmation.schedule.split(',');
+		const timeRange = timePart.split('-')[0].trim(); // Get the start time part only
+	
+		// Combine date and start time to form a complete Date object
+		const dateTime = new Date(`${datePart.trim()} ${timeRange}`);
+	
+		const appointmentData = {
+			serviceNeeded: servicesRequired,
+			dateTime: dateTime.toISOString(),
+			clientID: "ClientID", 
+			caregiverID: caregiverName, 
+			status: "Pending"
+		};
+	
+		api.post('appointment/new', appointmentData)
+			.then(response => {
+				console.log('Appointment created:', response.data);
+			})
+			.catch(error => {
+				console.error('Failed to create appointment:', error);
+			});
+	}
+	
     const [editMode, setEditMode] = useState({
         service: false,
         schedule: false,
@@ -62,45 +93,54 @@ function Booking() {
     };
 
     const handleSave = () => {
-        setShowCalendar(false);
-        setEditMode({
-            ...editMode,
-            schedule: false,
-            service: false,
-            price_breakdown: false
-        });
+		// Get today's date in the required format immediately
+		const today = new Date();
+		const defaultStartTime = "19:30";
+		const defaultEndTime = "20:00";
+	
+		// Format today's date for the calendar if not selected
+		const formattedDay = selectedDay ? selectedDay.toLocaleDateString('en-US', {
+			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+		}) : today.toLocaleDateString('en-US', {
+			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+		});
+	
+		// Use default times if none are selected
+		const formattedTime = startTime && endTime ? `${startTime} - ${endTime}` :
+							  `${defaultStartTime} - ${defaultEndTime}`;
+	
+		const newSchedule = `${formattedDay}, ${formattedTime}`;
+	
+		// Update schedule in bookingConfirmation with either selected or default values
+		setBookingConfirmation(prevState => ({
+			...prevState,
+			schedule: newSchedule
+		}));
+	
+		// Hide calendar and reset edit mode states
+		setShowCalendar(false);
+		setEditMode(prevState => ({
+			...prevState,
+			schedule: false,
+			service: false,
+			price_breakdown: false
+		}));
+	};
+	
+	
 
-        // Calculate total price from the breakdown
-        const totalPrice = bookingConfirmation.price_breakdown.reduce((acc, service) => {
-            if (bookingConfirmation.service_required.includes(service.name)) {
-                return acc + service.price;
-            }
-            return acc;
-        }, 0);
-
-        // Format the selected day and time
-        const formattedDay = selectedDay ? selectedDay.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : '';
-        const formattedTime = startTime && endTime ? `${startTime} - ${endTime}` : '';
-
-        // Update schedule in bookingConfirmation
-        setBookingConfirmation({
-            ...bookingConfirmation,
-            total: totalPrice,
-            schedule: `${formattedDay}, ${formattedTime}`
-        });
-    };
-
-    const handleCalendarChange = (selectedDate) => {
-        setSelectedDay(selectedDate);
-    };
+    const handleCalendarChange = (date) => {
+		console.log(date);
+		setSelectedDay(date);
+	};
 
     const handleTimeChange = (time, type) => {
-        if (type === "start") {
-            setStartTime(time);
-        } else {
-            setEndTime(time);
-        }
-    };
+		if (type === "start") {
+			setStartTime(time);
+		} else if (type === "end") {
+			setEndTime(time);
+		}
+	};
 
     const handleClick = (service) => {
         const newServiceRequired = [...bookingConfirmation.service_required];
@@ -155,18 +195,9 @@ function Booking() {
 					{editMode.schedule ? (
 						<>
 							<Calendar onChange={handleCalendarChange} />
+							<TimePicker label="Start Time" onChange={time => handleTimeChange(time, "start")} />
+							<TimePicker label="End Time" onChange={time => handleTimeChange(time, "end")} />
 
-							<div className="time-selection">
-								<div>
-									<p>Start Time</p>
-									<TimePicker className='timePicker' onChange={(time) => handleTimeChange(time, "start")} />
-								</div>
-
-								<div>
-									<p>End Time</p>
-									<TimePicker className='timePicker' onChange={(time) => handleTimeChange(time, "end")} />
-								</div>
-							</div>
 							
 							<button className="save-button" onClick={handleSave}>Save</button>
 						</>
@@ -206,8 +237,8 @@ function Booking() {
 			</div>
 	
 			<div>
-				<button className="big-button" onClick={handleConfirmBooking(caregiverName)}>
-					Confirm Booking
+				<button className="big-button" onClick={handleConfirmBooking}>
+					<a href="/confirmation">Confirm Booking</a>
 				</button>
 			</div>
 		</div>
