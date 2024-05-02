@@ -4,12 +4,10 @@ import "../subpage/subpage_css/booking.css";
 import Navbar from "../components/navbar";
 import Calendar from "../components/calendar";
 import TimePicker from '../components/timepicker';
-import axios from 'axios';
+import api from '../../api.js';
 
-function handleConfirmBooking() {
-    const caregiverId = 'theCaregiverId';
-
-    axios.post(`/api/caregiver/increment-patients/${caregiverId}`)
+function handleConfirmBooking(caregiverName) {
+    api.post(`/caregiver/increment-patients/${caregiverName}`)
          .then(response => {
              console.log('Patient count incremented:', response.data);
              //TODO: Handle further actions after successful booking confirmation
@@ -208,7 +206,7 @@ function Booking() {
 			</div>
 	
 			<div>
-				<button className="big-button" onClick={handleConfirmBooking}>
+				<button className="big-button" onClick={handleConfirmBooking(caregiverName)}>
 					Confirm Booking
 				</button>
 			</div>

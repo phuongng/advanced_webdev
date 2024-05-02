@@ -249,12 +249,12 @@ app.put('/api/caregiver/update/:id', async (req, res) => {
 });
 
 // API to increment total patients for a caregiver
-app.post('/api/caregiver/increment-patients/:id', async (req, res) => {
-  const caregiverId = req.params.id;
+app.post('/api/caregiver/increment-patients/:name', async (req, res) => {
+  const caregiverName = req.params.name;
 
   try {
-      const updatedCaregiver = await Caregiver.findByIdAndUpdate(
-          caregiverId,
+      const updatedCaregiver = await Caregiver.findOneAndUpdate(
+          { 'caregiver.caregiver_name': caregiverName },
           { $inc: { 'caregiver.total_patients': 1 } },
           { new: true }
       );
@@ -265,7 +265,8 @@ app.post('/api/caregiver/increment-patients/:id', async (req, res) => {
 
       res.status(200).json(updatedCaregiver);
   } catch (error) {
-      console.error('Error updating caregiver:', error);
+      console.error('Error updating caregiver by name:', error);
       res.status(500).json({ error: 'Internal server error' });
   }
 });
+
