@@ -1,10 +1,19 @@
 import React, { useState } from "react";
+import { useLocation } from 'react-router-dom';
 import "../subpage/subpage_css/booking.css";
 import Navbar from "../components/navbar";
 import Calendar from "../components/calendar";
 import TimePicker from '../components/timepicker';
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 function Booking() {
+    const query = useQuery();
+    const caregiverName = query.get('caregiverName');
+	console.log("Received caregiver name:", caregiverName);
+
     const [bookingConfirmation, setBookingConfirmation] = useState({
         service_required: [],
         schedule: "",
@@ -100,6 +109,7 @@ function Booking() {
 		<Navbar />
 		<div className="booking">
 			<div className="booking-title">
+				<h1>Schedule with {caregiverName}</h1>
 				<h3>Just one last step!</h3>
 				<p>Review your care plan summary before confirming.</p>
 			</div>

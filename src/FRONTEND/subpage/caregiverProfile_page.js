@@ -7,6 +7,7 @@ import { RiMessage2Fill } from "react-icons/ri";
 import "../subpage/subpage_css/caregiverProfile.css";
 import api from '../../api.js';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function CaregiverProfile() {
     const { fullname } = useParams();
@@ -49,16 +50,14 @@ function CaregiverProfile() {
         title: caregiverTitle,
         rating,
         reviews,
-        //total_patients: totalPatients,
+        total_patients: totalPatients,
         year_experience: yearsExperience,
-        //about_me: aboutMe,
+        about_me: aboutMe,
         skills: servicesOffered,
         //image
     } = caregiverData.caregiver;
 
     //TODO add these to the caregiver?
-    var totalPatients;
-    var aboutMe;
     var image;
 
     return (
@@ -120,7 +119,7 @@ function CaregiverProfile() {
                 </div>
                 
                 <div className="caregiver-profile-3">
-                    <h3>About me</h3>
+                    <h2>About me</h2>
                     <p>{aboutMe}</p>
                 </div>
 
@@ -134,7 +133,9 @@ function CaregiverProfile() {
                 </div>
 
                 <div>
-                    <button className='big-button'><a href="/booking">Schedule Services</a></button>
+                    <Link to={`/booking?caregiverName=${encodeURIComponent(caregiverName)}`} className="big-button">
+                        Schedule Services
+                    </Link>
                 </div>
             </div>
         </>
