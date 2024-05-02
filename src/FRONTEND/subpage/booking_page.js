@@ -4,6 +4,20 @@ import "../subpage/subpage_css/booking.css";
 import Navbar from "../components/navbar";
 import Calendar from "../components/calendar";
 import TimePicker from '../components/timepicker';
+import axios from 'axios';
+
+function handleConfirmBooking() {
+    const caregiverId = 'theCaregiverId';
+
+    axios.post(`/api/caregiver/increment-patients/${caregiverId}`)
+         .then(response => {
+             console.log('Patient count incremented:', response.data);
+             //TODO: Handle further actions after successful booking confirmation
+         })
+         .catch(error => {
+             console.error('Failed to increment patient count:', error);
+         });
+}
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -194,8 +208,8 @@ function Booking() {
 			</div>
 	
 			<div>
-				<button className="big-button">
-					<a href="/confirmation">Confirm Booking</a>
+				<button className="big-button" onClick={handleConfirmBooking}>
+					Confirm Booking
 				</button>
 			</div>
 		</div>

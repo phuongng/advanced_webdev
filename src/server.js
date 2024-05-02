@@ -247,3 +247,25 @@ app.put('/api/caregiver/update/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// API to increment total patients for a caregiver
+app.post('/api/caregiver/increment-patients/:id', async (req, res) => {
+  const caregiverId = req.params.id;
+
+  try {
+      const updatedCaregiver = await Caregiver.findByIdAndUpdate(
+          caregiverId,
+          { $inc: { 'caregiver.total_patients': 1 } },
+          { new: true }
+      );
+
+      if (!updatedCaregiver) {
+          return res.status(404).json({ message: 'Caregiver not found' });
+      }
+
+      res.status(200).json(updatedCaregiver);
+  } catch (error) {
+      console.error('Error updating caregiver:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
