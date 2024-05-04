@@ -1,6 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,13 +16,24 @@ app.use(express.json());
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 mongoose.connect("mongodb+srv://cosc617:admin@kindredapp.s34qhh0.mongodb.net/kindred", { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB connected"))
-    .catch(err => console.log("MongoDB connection error: ", err));
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log("MongoDB connection error: ", err));
 
 const Caregiver = require("./models/caregiver"); // Create the Caregiver model
 const Appointment = require("./models/appointment");
 const Review = require("./models/review");
 const Client = require("./models/client");
+
+// Nodemailer Transporter
+let transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'phenxejs@gmail.com', //throwaway email
+    pass: 'ffob dvfb imfn odiz'
+  }
+});
 
 /* Sample API call setup, uses mongoose model schema */
 // GET
@@ -91,7 +106,7 @@ app.post('/api/client/new', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.post('/api/review/new', async (req, res) => {
+app.post('/api/review/new', authenticateToken, async (req, res) => {
   try {
     const newReview = new Review(req.body);
     await newReview.save();
@@ -101,37 +116,86 @@ app.post('/api/review/new', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.post('/api/appointment/new', async (req, res) => {
+app.post('/api/appointment/new', authenticateToken, async (req, res) => {
   try {
     const newAppointment = new Appointment(req.body);
 
+    const client = await Client.findById(newAppointment.clientID);
+
+    const caregiver = await Caregiver.findById(newAppointment.caregiverID);
+
+    if (!client || !caregiver) {
+      return res.status(404).json({ error: 'Client or Caregiver not found' });
+    }
+
     await newAppointment.save();
+
+    function html(patientFirstName, patientLastName, fullname, dateTime, serviceNeeded) {
+      return `
+        <h1>Appointment Confirmation</h1>
+        <p>Patient Name: ${patientFirstName} ${patientLastName}</p>
+        <p>Caregiver Name: ${fullname}</p>
+        <p>Appointment Date and Time: ${dateTime}</p>
+        <p>Service Needed: ${serviceNeeded}</p>
+      `;
+    }
+
+    const mailOptions = {
+      from: 'phenxejs@gmail.com', // throwaway email
+      to: client.personalInfo.email,
+      subject: `Kindred Appointment Confirmation on ${newAppointment.dateTime}`,
+      text: `Appointment Confirmation\n\nPatient Name: ${client.personalInfo.patientFirstName} ${client.personalInfo.patientLastName}\nCaregiver Name: ${caregiver.fullname}\nAppointment Date and Time: ${newAppointment.dateTime}\nService Needed: ${newAppointment.serviceNeeded}`,
+      html: html(client.personalInfo.patientFirstName,
+        client.personalInfo.patientLastName,
+        caregiver.fullname,
+        newAppointment.dateTime,
+        newAppointment.serviceNeeded)
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error sending email:', error);
+      } else {
+        console.log('Appointment confirmation email sent:', info.response);
+      }
+    });
 
     res.status(201).json(newAppointment);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
-// DELETE 
-app.delete('/api/caregiver/delete/:id', async (req, res) => {
-  const caregiverId = req.params.id;
-
+app.post('/api/client/login', async (req, res) => {
   try {
-    const deletedCaregiver = await Caregiver.findByIdAndDelete(caregiverId);
-
-    if (!deletedCaregiver) {
-      return res.status(404).json({ message: 'Caregiver not found' });
+    const client = await Client.findOne({ 'login.username': req.body.username });
+    if (client == null) {
+      return res.status(400).json({ message: 'Client not found' });
     }
-
-    res.status(200).json({ message: 'Caregiver deleted successfully' });
+    if (await bcrypt.compare(req.body.password, client.login.password)) {
+      const accessToken = jwt.sign({ name: client.login.username }, process.env.ACCESS_TOKEN_SECRET);
+      res.status(200).json({ accessToken: accessToken, message: 'Login successful' });
+    } else {
+      res.status(401).json({ message: 'Wrong Password' });
+    }
   } catch (error) {
-    // Handle errors
-    console.error('Error deleting caregiver:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.delete('/api/client/delete/:id', async (req, res) => {
+
+// DELETE 
+app.delete('/api/caregiver/delete/:id', authenticateToken, async (req, res) => {
+  const caregiverId = req.params.id;
+  try {
+    const caregiver = await Caregiver.findByIdAndDelete(caregiverId);
+    if (!caregiver) {
+      return res.status(404).json({ message: 'Caregiver not found' });
+    }
+    res.status(200).json({ message: 'Caregiver deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+app.delete('/api/client/delete/:id', authenticateToken, async (req, res) => {
   const clientId = req.params.id;
 
   try {
@@ -147,7 +211,7 @@ app.delete('/api/client/delete/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.delete('/api/appointment/delete/:id', async (req, res) => {
+app.delete('/api/appointment/delete/:id', authenticateToken, async (req, res) => {
   const appointmentId = req.params.id;
 
   try {
@@ -162,7 +226,7 @@ app.delete('/api/appointment/delete/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.delete('/api/review/delete/:id', async (req, res) => {
+app.delete('/api/review/delete/:id', authenticateToken, async (req, res) => {
   const reviewId = req.params.id;
 
   try {
@@ -179,7 +243,7 @@ app.delete('/api/review/delete/:id', async (req, res) => {
 });
 
 // PUT
-app.put('/api/client/update/:id', async (req, res) => {
+app.put('/api/client/update/:id', authenticateToken, async (req, res) => {
   const clientId = req.params.id;
   const updateData = req.body;
 
@@ -196,7 +260,7 @@ app.put('/api/client/update/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.put('/api/appointment/update/:id', async (req, res) => {
+app.put('/api/appointment/update/:id', authenticateToken, async (req, res) => {
   const appointmentId = req.params.id;
   const updateData = req.body;
 
@@ -213,7 +277,7 @@ app.put('/api/appointment/update/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.put('/api/review/update/:id', async (req, res) => {
+app.put('/api/review/update/:id', authenticateToken, async (req, res) => {
   const reviewId = req.params.id;
   const updateData = req.body;
 
@@ -230,7 +294,7 @@ app.put('/api/review/update/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.put('/api/caregiver/update/:id', async (req, res) => {
+app.put('/api/caregiver/update/:id', authenticateToken, async (req, res) => {
   const caregiverId = req.params.id;
   const updateData = req.body;
 
@@ -253,20 +317,32 @@ app.post('/api/caregiver/increment-patients/:name', async (req, res) => {
   const caregiverName = req.params.name;
 
   try {
-      const updatedCaregiver = await Caregiver.findOneAndUpdate(
-          { 'caregiver.caregiver_name': caregiverName },
-          { $inc: { 'caregiver.total_patients': 1 } },
-          { new: true }
-      );
+    const updatedCaregiver = await Caregiver.findOneAndUpdate(
+      { 'caregiver.caregiver_name': caregiverName },
+      { $inc: { 'caregiver.total_patients': 1 } },
+      { new: true }
+    );
 
-      if (!updatedCaregiver) {
-          return res.status(404).json({ message: 'Caregiver not found' });
-      }
+    if (!updatedCaregiver) {
+      return res.status(404).json({ message: 'Caregiver not found' });
+    }
 
-      res.status(200).json(updatedCaregiver);
+    res.status(200).json(updatedCaregiver);
   } catch (error) {
-      console.error('Error updating caregiver by name:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error updating caregiver by name:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
+//Authenticate Token
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(401);
+    req.user = user;
+    next();
+  })
+}
