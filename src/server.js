@@ -71,6 +71,50 @@ app.get("/api/appointment", async (req, res) => {
 });
 
 // POST
+app.post('/api/register', async (req, res) => {
+  const { fullName, birthday, email, password, zipcode, sexAtBirth } = req.body;
+
+  try {
+    // Check if the email already exists in the client collection
+    let clientExists = await Client.exists({ 'login.email': email });
+
+    if (clientExists) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // Split full name into first name and last name
+    const [firstName, lastName] = fullName.split(' ');
+
+    // Create a new client document
+    const newClient = new Client({
+      login: {
+        username: email, // Assuming email as username for simplicity
+        password: password
+      },
+      personalInfo: {
+        clientType: 'Patient', // Assuming client type as 'Patient' by default
+        guardianName: '', // No guardian initially
+        patientFirstName: firstName,
+        patientLastName: lastName,
+        photo: '', // No photo initially
+        sexatBirth: sexAtBirth, // Set sexAtBirth field
+        email: email,
+        dob: new Date(birthday),
+        zipcode: zipcode
+      }
+    });
+
+    // Save the new client document
+    await newClient.save();
+
+    // Respond with success message
+    res.status(201).json({ message: 'User registered successfully', user: newClient });
+  } catch (error) {
+    // Handle errors
+    console.error('Error registering user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 app.post('/api/caregiver/new', async (req, res) => {
   try {
     const newCaregiver = new Caregiver(req.body);
