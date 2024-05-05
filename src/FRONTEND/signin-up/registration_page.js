@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./signin-up_css/registration.css";
 import api from '../../api.js';
-import axios from 'axios';
 import { FaUpload } from "react-icons/fa6";
 
 function Registration() {
