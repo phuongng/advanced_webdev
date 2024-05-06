@@ -15,7 +15,32 @@ function Booking() {
 
     const query = useQuery();
     const caregiverName = query.get('caregiverName');
-    console.log("Received caregiver name:", caregiverName);
+
+
+	const [selectedDate, setSelectedDate] = useState(null);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+
+	const handleDateChange = date => {
+		console.log(date);
+        // 'date' is in the format 'YYYY-MM-DD'
+		const [year, month, day] = date.split('-').map(num => parseInt(num, 10));
+		// Create a new date object using local time zone
+		const correctedDate = new Date(year, month - 1, day);
+		setSelectedDate(correctedDate);
+    };
+    
+    const handleStartTimeChange = time => {
+        setStartTime(time);
+    };
+    
+    const handleEndTimeChange = time => {
+        setEndTime(time);
+    };
+    
+    const formatSchedule = () => selectedDate && startTime && endTime ?
+    `${new Date(selectedDate).toLocaleDateString()} from ${startTime} to ${endTime}` : 'No schedule selected';
+
 
     const [bookingConfirmation, setBookingConfirmation] = useState({
         service_required: [],
@@ -43,18 +68,15 @@ function Booking() {
     }, [bookingConfirmation.service_required]);
     
     const handleConfirmBooking = () => {
-
-     
-        
-        // Define all possible services and initialize them to false
-        const servicesRequired = {
-            "Personal Care Assistance": false,
-            "Mobility Aid": false,
-            "Errands": false,
-            "Medication Management": false,
-            "Catheter Care": false,
-            "Emotional Support": false
-        };
+		// Define all possible services and initialize them to false
+		const servicesRequired = {
+			"Personal Care Assistance": false,
+			"Mobility Aid": false,
+			"Errands": false,
+			"Medication Management": false,
+			"Catheter Care": false,
+			"Emotional Support": false
+		};
 
         // Update the required services to true based on user selection
         bookingConfirmation.service_required.forEach(service => {
@@ -63,28 +85,36 @@ function Booking() {
             }
         });
 
-        // Parse the schedule to extract date and time
-        const [datePart, timePart] = bookingConfirmation.schedule.split(',');
-        const timeRange = timePart.split('-')[0].trim(); // Get the start time part only
+		console.log('Current schedule:', bookingConfirmation.schedule);
 
-        // Combine date and start time to form a complete Date object
-        const dateTime = new Date(`${datePart.trim()} ${timeRange}`);
+		if (bookingConfirmation.schedule) {
+			const [datePart, timePart] = bookingConfirmation.schedule.split(',');
+			if (datePart && timePart) {
+				const timeRange = timePart.trim().split('-')[0].trim(); // Get the start time part only
 
-        const appointmentData = {
-            serviceNeeded: servicesRequired,
-            dateTime: dateTime.toISOString(),
-            clientID: "ClientID",
-            caregiverID: caregiverName,
-            status: "Pending"
-        };
+				// Combine date and start time to form a complete Date object
+				const dateTime = new Date(`${datePart.trim()} ${timeRange}`);
 
-        api.post('appointment/new', appointmentData)
-            .then(response => {
-                console.log('Appointment created:', response.data);
-            })
-            .catch(error => {
-                console.error('Failed to create appointment:', error);
-            });
+				const appointmentData = {
+					serviceNeeded: bookingConfirmation.service_required.reduce((acc, service) => ({ ...acc, [service]: true }), {}),
+					dateTime: dateTime.toISOString(),
+					clientID: "661399fff6281483dd3fc4a2",
+					caregiverID: caregiverName,
+					status: "Pending"
+				};
+
+				console.log('data:', appointmentData);
+				api.post('appointment/new', appointmentData)
+					.then(response => {
+						console.log('Appointment created:', response.data);
+					})
+					.catch(error => {
+						console.error('Failed to create appointment:', error);
+					});
+			}
+		} else {
+			console.error('No schedule set');
+		}
     }
 
     const [editMode, setEditMode] = useState({
@@ -95,8 +125,6 @@ function Booking() {
 
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDay, setSelectedDay] = useState(null);
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
 
     const toggleEditMode = (field) => {
         setEditMode({
@@ -109,51 +137,27 @@ function Booking() {
     };
 
     const handleSave = () => {
-        // Get today's date in the required format immediately
-        const today = new Date();
-        const defaultStartTime = "19:30";
-        const defaultEndTime = "20:00";
-
-        // Format today's date for the calendar if not selected
-        const formattedDay = selectedDay ? selectedDay.toLocaleDateString('en-US', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        }) : today.toLocaleDateString('en-US', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-
-        // Use default times if none are selected
-        const formattedTime = startTime && endTime ? `${startTime} - ${endTime}` :
-            `${defaultStartTime} - ${defaultEndTime}`;
-
-        const newSchedule = `${formattedDay}, ${formattedTime}`;
-
-        // Update schedule in bookingConfirmation with either selected or default values
-        setBookingConfirmation(prevState => ({
-            ...prevState,
-            schedule: newSchedule
-        }));
-
-        // Hide calendar and reset edit mode states
-        setShowCalendar(false);
-        setEditMode(prevState => ({
-            ...prevState,
-            schedule: false,
-            service: false,
-            price_breakdown: false
-        }));
-    };
-
-    const handleCalendarChange = (date) => {
-        console.log(date);
-        setSelectedDay(date);
-    };
-
-    const handleTimeChange = (time, type) => {
-        if (type === "start") {
-            setStartTime(time);
-        } else if (type === "end") {
-            setEndTime(time);
-        }
+		if (selectedDate && startTime && endTime) {
+			const formattedDate = new Date(selectedDate).toLocaleDateString('en-US');
+			const newSchedule = `${formattedDate}, ${startTime} - ${endTime}`;
+	
+			// Update schedule in bookingConfirmation with either selected or default values
+			setBookingConfirmation(prevState => ({
+				...prevState,
+				schedule: newSchedule
+			}));
+	
+			// Hide calendar and reset edit mode states
+			setShowCalendar(false);
+			setEditMode(prevState => ({
+				...prevState,
+				schedule: false,
+				service: false,
+				price_breakdown: false
+			}));
+		} else {
+			alert('Please select a date, start time, and end time.');
+		}
     };
 
     const handleClick = (service) => {
@@ -208,10 +212,22 @@ function Booking() {
                         <b>Schedule:</b>
                         {editMode.schedule ? (
                             <>
-                                <Calendar onChange={handleCalendarChange} />
-                                <TimePicker label="Start Time" onChange={time => handleTimeChange(time, "start")} />
-                                <TimePicker label="End Time" onChange={time => handleTimeChange(time, "end")} />
-
+								<div>
+									<label>Date:</label>
+									<input type="date" value={selectedDate} onChange={e => handleDateChange(e.target.value)} />
+								</div>
+								<div>
+									<label>Start Time:</label>
+									<input type="time" value={startTime} onChange={e => handleStartTimeChange(e.target.value)} />
+								</div>
+								<div>
+									<label>End Time:</label>
+									<input type="time" value={endTime} onChange={e => handleEndTimeChange(e.target.value)} />
+								</div>
+								<div>
+									<h4>Scheduled Time:</h4>
+									<p>{formatSchedule()}</p>
+								</div>
 
                                 <button className="save-button" onClick={handleSave}>Save</button>
                             </>
