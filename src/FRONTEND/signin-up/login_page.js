@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { FaFacebookF, FaGoogle, FaApple, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Logo from "../image/favicon.png";
 import api from '../../api.js';
-import axios from "axios";
-
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +11,7 @@ function Login() {
     email: "", 
     password: ""
   });
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,16 +29,17 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('form:', formData);
       const response = await api.post(`/client/login`, formData);
-      alert(response.data.message); // Log response message
-      navigate('/home')
+      setMessage(response.data.message); // Set message from response
+      if (response.data.success) {
+        navigate('/home');
+      }
     } catch (error) {
       console.error('Error:', error);
-      alert(error.code + ' : ' + error.message);
-
+      setMessage(error.message); // Set error message
     }
   };
+
   return (
     <>
       <div className="login">
@@ -115,6 +115,16 @@ function Login() {
           </form>
         </div>
       </div>
+
+      {/* Message dialog */}
+      {message && (
+        <div className="message-dialog">
+          <div className="message-content">
+            <p>{message}</p>
+            <button onClick={() => setMessage(null)}>Close</button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

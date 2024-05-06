@@ -170,3 +170,38 @@
     height: 20px;
   }
   
+
+  /* login.css */
+/* Your existing styles */
+
+.message-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    width: 300px; /* Adjust width as needed */
+    z-index: 9999;
+  }
+  
+  .message-content {
+    text-align: center;
+  }
+  
+  .message-content p {
+    margin-bottom: 10px;
+  }
+  
+  .message-content button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
