@@ -1,19 +1,43 @@
 import React, { useState } from "react";
 import "./signin-up_css/login.css";
-//import social media icons
-import { FaFacebookF } from "react-icons/fa";
-import { FaGoogle } from "react-icons/fa";
-import { FaApple } from "react-icons/fa";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa"; 
+import { useNavigate } from 'react-router-dom';
+import { FaFacebookF, FaGoogle, FaApple, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Logo from "../image/favicon.png";
+import api from '../../api.js';
+
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "", 
+    password: ""
+  });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post(`/client/login`, formData);
+      alert(response.data.message); // Log response message
+      navigate('/home')
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error.code + ' : ' + error.message);
+
+    }
+  };
   return (
     <>
       <div className="login">
@@ -33,13 +57,15 @@ function Login() {
         </div>
 
         <div className="bottom_login">
-          <form className="login_form">
+          <form className="login_form" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email">Email address:</label>
               <input
                 type="email"
                 id="email"
-                name="email"
+                name="username" // Changed from email
+                value={formData.username} // Changed from email
+                onChange={handleChange}
                 required
                 placeholder="Enter email"
               />
@@ -52,6 +78,8 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   required
                   placeholder="Enter password"
                 />
@@ -70,7 +98,7 @@ function Login() {
             </p>
 
             <div className="signin-option">
-              <button id="signin-big-button" className="big-button">
+              <button type="submit" id="signin-big-button" className="big-button">
                 Sign In
               </button>
 

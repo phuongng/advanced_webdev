@@ -100,11 +100,14 @@ app.post('/api/register', async (req, res) => {
     // Split full name into first name and last name
     const [firstName, lastName] = fullName.split(' ');
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create a new client document
     const newClient = new Client({
       login: {
         username: email, // Assuming email as username for simplicity
-        password: password
+        password: hashedPassword // Store hashed password
       },
       personalInfo: {
         clientType: 'Patient', // Assuming client type as 'Patient' by default
@@ -222,6 +225,7 @@ app.post('/api/client/login', async (req, res) => {
       res.status(401).json({ message: 'Wrong Password' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

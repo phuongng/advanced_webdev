@@ -31,8 +31,12 @@ a{
   text-decoration: none;
   color: white;
 }
+
+.button-container{
+  padding: 20px 0 60px;
+}
 .big-button{
-  width: 50%;
+  width: auto;
   height: 50px;
   border: none;
   border-radius: 25px;
@@ -40,6 +44,8 @@ a{
   font-size: 20px;
   background-color: #687864;
   color: white;  
+  padding: 5px 20px;
+  
 }
 
 .medium-button{
@@ -51,13 +57,17 @@ a{
   font-size: 13px;
   background-color: #687864;
   color: white;  
+  
 }
 
-h3{
+h2, h3{
   color:#687864;
   margin-bottom: 10px;
 }
 
+h5{
+  margin: 10px 0;
+}
 p{
   font-size: 12px;
 }
