@@ -30,6 +30,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('form:', formData);
       const response = await api.post(`/client/login`, formData);
       alert(response.data.message); // Log response message
       navigate('/home')

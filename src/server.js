@@ -213,15 +213,18 @@ app.post('/api/appointment/new', authenticateToken, async (req, res) => {
   }
 });
 app.post('/api/client/login', async (req, res) => {
+  console.log('Received login request with data:', req.body);
   try {
     const client = await Client.findOne({ 'login.username': req.body.email });
     if (client == null) {
+      console.log('client null');
       return res.status(400).json({ message: 'Client not found' });
     }
     if (await bcrypt.compare(req.body.password, client.login.password)) {
       const accessToken = jwt.sign({ name: client.login.username }, process.env.ACCESS_TOKEN_SECRET);
       res.status(200).json({ accessToken: accessToken, message: 'Login successful' });
     } else {
+      console.log('pw wrong');
       res.status(401).json({ message: 'Wrong Password' });
     }
   } catch (error) {
