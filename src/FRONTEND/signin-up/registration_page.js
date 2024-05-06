@@ -50,7 +50,7 @@ function Registration() {
         let errorMessage = "";
         switch (fieldName) {
             case "email":
-                if (!value.includes("@") || value.length > 20) {
+                if (!value.includes("@")) {
                     errorMessage = "Email must be valid and not exceed 20 characters";
                 }
                 break;

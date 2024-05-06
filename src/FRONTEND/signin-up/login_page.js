@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { FaFacebookF, FaGoogle, FaApple, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Logo from "../image/favicon.png";
 import api from '../../api.js';
+import axios from "axios";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: "", 
+    email: "", 
     password: ""
   });
   const navigate = useNavigate();
@@ -63,8 +64,8 @@ function Login() {
               <input
                 type="email"
                 id="email"
-                name="username" // Changed from email
-                value={formData.username} // Changed from email
+                name="email"
+                value={formData.email} 
                 onChange={handleChange}
                 required
                 placeholder="Enter email"
