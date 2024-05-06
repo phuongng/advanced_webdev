@@ -58,7 +58,7 @@ function Registration() {
         switch (fieldName) {
             case "email":
                 if (!value.includes("@")) {
-                    errorMessage = "Email must be valid";
+                    errorMessage = "Email must be valid and not exceed 20 characters";
                 }
                 break;
             case "password":

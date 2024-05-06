@@ -214,7 +214,7 @@ app.post('/api/appointment/new', authenticateToken, async (req, res) => {
 });
 app.post('/api/client/login', async (req, res) => {
   try {
-    const client = await Client.findOne({ 'login.username': req.body.username });
+    const client = await Client.findOne({ 'login.username': req.body.email });
     if (client == null) {
       return res.status(400).json({ message: 'Client not found' });
     }
