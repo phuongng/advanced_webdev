@@ -1,7 +1,7 @@
 .message{
     height: 100vh;
     overflow-y: auto;
-    padding-bottom: 40px;
+    padding-bottom: 60px;
     display: flex;
     flex-direction: column;
     background-color: #F7F9FB;
@@ -33,6 +33,8 @@
 
 .receiver-img-container img{
     border-radius: 50%;
+    width: 50px;
+    height: 50px;
 }
 
 .horizontal-line-msg{
@@ -44,17 +46,21 @@
     border: none;
     width: calc(100% - 60px);
 }
-
-.message-input{
+.message-input {
     display: flex;
     flex-direction: row;
-    position: absolute;
+    position: fixed; /* Change from absolute to fixed */
     bottom: 0;
     justify-content: space-between;
     align-items: center;
-    padding: 25px;
+    padding: 10px 25px;
     width: calc(100% - 50px);
+    background-color: #ffffff; /* Optional: add background color */
+    border-top: 1px solid #dddddd; /* Optional: add border top */
+    margin-bottom: 45px; /* Height of the navigation bar */
 }
+
+
 
 .send-icon{
     height: 30px;

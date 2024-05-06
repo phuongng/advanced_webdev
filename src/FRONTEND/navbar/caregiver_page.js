@@ -118,30 +118,34 @@ function Caregiver() {
                 >
                   </div>
                    
-                    <div className="caregiver-name-container">
-                      <p>
-                        <b>{caregiver.fullname}</b>
-                      </p>
-                      <div
-                        className={`caregiver-rating-container ${
-                          activeSortButton === "rating" ? "rating-highlight" : ""
-                        }`}
-                      >
-                        <FaStar
-                          color={getStarColor(caregiver.caregiver.rating)}
-                        />{" "}
-                        <span>{`${caregiver.caregiver.rating} / 5 `}</span>
-                      </div>
+                    <div className="caregiver-name-container">  
+                      <p  className="caregiver-name"> {caregiver.fullname}</p> 
+                      
                     </div>
-                    <div
-                      className={`caregiver-price-container ${
-                        activeSortButton === "price" ? "highlight" : ""
-                      }`}
-                    >
-                      <p id="price">
-                        ${caregiver.caregiver.hourly_rate} / hour
-                      </p>
+
+                    <div className="caregiver-rate-price">
+                        <div
+                          className={`caregiver-rating-container ${
+                            activeSortButton === "rating" ? "highlight" : ""
+                          }`}
+                        >
+                          <FaStar
+                            color={getStarColor(caregiver.caregiver.rating)}
+                          />{" "}
+                          <span>{`${caregiver.caregiver.rating} / 5 `}</span>
+                        </div>
+
+                        <div
+                          className={`caregiver-price-container ${
+                            activeSortButton === "price" ? "highlight" : ""
+                          }`}
+                        >
+                          <p id="price">
+                            ${caregiver.caregiver.hourly_rate} / hour
+                          </p>
+                        </div>
                     </div>
+                    
                  
                 </Link>
               </div>

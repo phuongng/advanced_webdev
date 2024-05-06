@@ -130,6 +130,14 @@ function CaregiverProfile() {
                     </div>
                 </div>
                 <hr className='horizontalLine'></hr>
+
+                <div className="caregiver-profile-5">
+                    <h3>Contact Me</h3>
+                   
+                </div>
+                <hr className='horizontalLine'></hr>
+
+
                 <div  className="button-container" >
                     <button className="big-button">
                     <Link to={`/booking?caregiverName=${encodeURIComponent(caregiverName)}`} >
