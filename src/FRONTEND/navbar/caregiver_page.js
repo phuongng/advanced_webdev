@@ -108,12 +108,14 @@ function Caregiver() {
             {sortedCaregivers.map((caregiver, index) => (
               <div key={index} className="caregiver-list">
                 <Link to={`/caregiver-profile/${caregiver.fullname}`}>
-                  <div className="caregiver-image-container">
-                  <img
-                      className="caregiver-image"
-                      alt="caregiver-image-alt"
-                      src=""
-                    />
+                  <div className="caregiver-image-container"
+                  style={{
+                    backgroundImage: `url('/images/${caregiver.img}')`,
+                    backgroundSize: 'cover', // This ensures the image covers the entire div
+                    backgroundPosition: 'center', // This centers the image in the div
+                    backgroundRepeat: 'no-repeat' // This prevents the image from repeating
+                  }}
+                >
                   </div>
                    
                     <div className="caregiver-name-container">
