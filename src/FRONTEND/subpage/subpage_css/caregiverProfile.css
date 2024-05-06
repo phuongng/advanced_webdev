@@ -7,9 +7,9 @@ p{
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding-bottom: 40px;
-    /* background-color: #F7F9FB; */
-    background-color: #687864;
+    padding-bottom: 20px;
+    background-color: #F7F9FB;
+
     
 }
 
@@ -75,7 +75,7 @@ p{
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 120px;
+    height: 100px;
 
 }
 
@@ -109,6 +109,11 @@ p{
 .caregiver-profile-4{
     text-align: left;
     padding: 25px;
-
 }
 
+
+.horizontalLine{ 
+    border: 0.5px solid rgb(104, 120, 100, 0.5);
+    width: 80%;
+    text-align: center;
+}

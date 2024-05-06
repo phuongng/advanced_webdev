@@ -64,7 +64,7 @@ function Home() {
 			</div>
 
 			<div className="button-container">
-			<button className="schedule-button"><a href="/scheduling">Let's schedule it</a></button>
+			<button className="big-button"><a href="/scheduling">Let's schedule it</a></button>
 			</div>
 		</div>
 		

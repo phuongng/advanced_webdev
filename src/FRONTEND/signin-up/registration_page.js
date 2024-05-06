@@ -3,9 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import "./signin-up_css/registration.css";
 import api from '../../api.js';
 import { FaUpload } from "react-icons/fa6";
+import {FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 function Registration() {
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+      };
+    
 
     const [formData, setFormData] = useState({
         fullName: "",
@@ -50,8 +57,8 @@ function Registration() {
         let errorMessage = "";
         switch (fieldName) {
             case "email":
-                if (!value.includes("@") || value.length > 20) {
-                    errorMessage = "Email must be valid and not exceed 20 characters";
+                if (!value.includes("@")) {
+                    errorMessage = "Email must be valid";
                 }
                 break;
             case "password":
@@ -82,15 +89,18 @@ function Registration() {
     return (
         <>
             <div className="registration">
+                <div>
                 <div className="setup-profile">
                     <h3 className="h3-text">Set Up Your Profile</h3>
                 </div>
                 <div className="upload-icon">
-                    <FaUpload />
+                    <FaUpload className="icon-upload"/>
                     <p className="upload-text">Upload your image</p>
                 </div>
 
                 <img className="profile-image"></img>
+                </div>
+               
                 <form className="registration-form">
                     <div>
                         <label htmlFor="fullName">Full Name: </label>
@@ -104,9 +114,26 @@ function Registration() {
                     </div>
                     <div className="error-message">{validationErrors.email}</div>
 
-                    <div>
+                    <div  className="password-input">
                         <label htmlFor="password">Password:  </label>
-                        <input type="password" name="password" id="password" value={formData.password} onChange={handleChange} onBlur={handleBlur} required placeholder="Enter Password" />
+                        <div className="password-with-toggle">
+                        <input  
+                        type={showPassword ? "text" : "password"} 
+                        name="password" 
+                        id="password" value={formData.password} 
+                        onChange={handleChange} 
+                        onBlur={handleBlur} 
+                        required placeholder="Enter Password" />
+
+                        <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="toggle-password"
+                        >
+                        {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                        </button>
+                        </div>
+                        
                     </div>
                     <div className="error-message">{validationErrors.password}</div>
 
@@ -122,7 +149,7 @@ function Registration() {
                     <div className="error-message">{validationErrors.zipcode}</div>
 
                     {/* Dropdown for selecting sex at birth */}
-                    <div>
+                    <div className="select-sex">
                         <label htmlFor="sexAtBirth">Sex at Birth</label>
                         <select name="sexAtBirth" id="sexAtBirth" value={formData.sexAtBirth} onChange={handleChange} required>
                             <option value="">Select</option>
@@ -131,10 +158,12 @@ function Registration() {
                         </select>
                     </div>
                 </form>
-            </div>
-            <div className="button-container">
+
+                <div className="button-container">
                 <button type="button" id="continue-button" className="big-button" onClick={handleSubmit}>Continue</button>
+                </div>
             </div>
+           
         </>
     )
 }
