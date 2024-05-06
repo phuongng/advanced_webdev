@@ -32,7 +32,9 @@ function Login() {
       const response = await api.post(`/client/login`, formData);
       setMessage(response.data.message); // Set message from response
       if (response.data.success) {
-        navigate('/home');
+        setTimeout(() => {
+          navigate('/home');
+        }, 2000); // Navigate to home page after 2 seconds
       }
     } catch (error) {
       console.error('Error:', error);
@@ -121,7 +123,6 @@ function Login() {
         <div className="message-dialog">
           <div className="message-content">
             <p>{message}</p>
-            <button onClick={() => setMessage(null)}>Close</button>
           </div>
         </div>
       )}
