@@ -15,15 +15,7 @@ function Login() {
   const [isMessageDialogDisplayed, setIsMessageDialogDisplayed] = useState(false); // Track if the message dialog is displayed
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (message && message.success) {
-      setIsMessageDialogDisplayed(true); // Show message dialog
-      setTimeout(() => {
-        navigate('/home');
-      }, 500); // Navigate to home page after 2 seconds
-    }
-  }, [message, navigate]);
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
