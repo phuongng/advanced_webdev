@@ -36,7 +36,7 @@ p{
 
 .caregiverProfile-image{
     background-color: #687864;
-    border-radius: 40%;
+    border-radius: 50%;
     height: 100px;
     width: 100px;  
 }
@@ -45,25 +45,30 @@ p{
     flex-direction: column;
     justify-content: space-between;
     align-items: start;
-    padding: 10px;
+    padding: 15px 10px;
     margin: 0;
 }
 
+.rating-star{
+    height: 10px;
+    color: #FFD700;
+}
 
 .giver-name{
     font-weight: bold;
     color: black;
+    font-size: 16px;
 }
 .giver-title{
     color: gray;
-    font-size: 14px;
+    font-size: 12px;
 
 }
 .caregiver-name span{
-    font-size: 14px;
+    font-size: 12px;
 }
 .caregiver-profile-2{
-    padding: 25px;
+    padding:  15px 25px ;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -75,7 +80,7 @@ p{
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 100px;
+    height: 90px;
 
 }
 
@@ -83,37 +88,43 @@ p{
     height: 25px;
     width: 25px;
     color:  #687864;
-    padding: 10px;
+    padding: 5px;
 }
 
 .profile-2-icon-container{
     background-color: #F7F9FB;
-    height: 50px;
-    width: 50px;
+    height: 35px;
+    width: 35px;
     border-radius: 50%;
 }
 
+.boldtext{
+    font-weight: bold;
+    font-size: 14px;
+}
 
 .caregiver-profile-2-container p{
     margin: 0;
 }
-.caregiver-profile-3{
+.caregiver-profile-3, .caregiver-profile-4, .caregiver-profile-5{
     text-align: left;
-    padding: 25px;
+    padding: 15px 25px ;
 }
 
 
 .caregiver-profile-3  p{
     margin-top: 15px;
 }
-.caregiver-profile-4{
-    text-align: left;
-    padding: 25px;
-}
-
 
 .horizontalLine{ 
     border: 0.5px solid rgb(104, 120, 100, 0.5);
-    width: 80%;
+    width: 90%;
     text-align: center;
+}
+
+.profile-5-icon{
+    height: 25px;
+    width: 25px;
+    color:  #687864;
+    padding: 5px;
 }

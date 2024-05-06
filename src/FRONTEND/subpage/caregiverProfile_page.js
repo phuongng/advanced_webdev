@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from "../components/navbar";
-import { FaStar } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
-import { FaCalendarCheck } from "react-icons/fa";
+import { FaStar, FaUser, FaCalendarCheck} from "react-icons/fa";
+
 import { RiMessage2Fill } from "react-icons/ri";
+import { IoIosMail } from "react-icons/io";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import "../subpage/subpage_css/caregiverProfile.css";
 import api from '../../api.js';
 import { useParams } from 'react-router-dom';
@@ -71,20 +72,20 @@ function CaregiverProfile() {
                         <p className='giver-name'>{caregiverName}</p>
                         <p className='giver-title'>{caregiverTitle && caregiverTitle.length > 0 ? caregiverTitle[0] : 'No Title'}</p>
                         <div>
-                            <FaStar /> <span>{`${rating} / 5 (${reviews} reviews)`}</span>
+                            <FaStar className='rating-star'/> <span>{`${rating} / 5 (${reviews} reviews)`}</span>
                             <br/>
                         </div>
                     </div>
                 </div>
 
-<hr className='horizontalLine'></hr>
+                <hr className='horizontalLine'></hr>
                 <div className="caregiver-profile-2">
                     <div className="caregiver-profile-2-container" >
                         <div className="profile-2-icon-container"> 
                             <FaUser className="profile-2-icon" />
                         </div>
                     
-                        <p>{totalPatients}+</p>
+                        <p className='boldtext'>{totalPatients}+</p>
                         <p>Patients</p>
                     </div>
 
@@ -93,7 +94,7 @@ function CaregiverProfile() {
                             <FaCalendarCheck className="profile-2-icon"/>
                         </div>
                     
-                        <p>{yearsExperience}+</p>
+                        <p className='boldtext'>{yearsExperience}+</p>
                         <p>Years</p>
                     </div>
 
@@ -102,7 +103,7 @@ function CaregiverProfile() {
                             <FaStar className="profile-2-icon"/> 
                         </div>
                             
-                        <p>{rating}</p>
+                        <p className='boldtext'>{rating}</p>
                         <p>Rating</p>
                     </div>
 
@@ -111,7 +112,7 @@ function CaregiverProfile() {
                             <RiMessage2Fill className="profile-2-icon"/> 
                         </div>
                     
-                        <p>{reviews}+</p>
+                        <p className='boldtext'>{reviews}+</p>
                         <p>Reviews</p>
                     </div>  
                 </div>
@@ -133,6 +134,16 @@ function CaregiverProfile() {
 
                 <div className="caregiver-profile-5">
                     <h3>Contact Me</h3>
+
+                    <div className='contactme-icons-container'>
+                    <IoIosMail className='profile-5-icon'/>
+
+                    <Link to={`/message?receiver=${encodeURIComponent(caregiverName)}&receiverImage=${encodeURIComponent(image)}`}>
+                        <IoChatboxEllipsesOutline className='profile-5-icon' />
+                    </Link>
+
+
+                    </div>
                    
                 </div>
                 <hr className='horizontalLine'></hr>

@@ -12,30 +12,27 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 25px; 
-    height: 60px;
 }
 
 .message-receiver-info{
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 15px 15px 5px;
 
 }
-.receiver-img-container{
-    height: 60px;
-}
+
 
 .receiver-img{
     width: 50px;
     height: 50px;
-    background-color: #687864;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.receiver-img-container img{
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-}
+
 
 .horizontal-line-msg{
     border-bottom: 0.5px solid  #F7F9FB;
@@ -49,15 +46,15 @@
 .message-input {
     display: flex;
     flex-direction: row;
-    position: fixed; /* Change from absolute to fixed */
+    position: fixed;
     bottom: 0;
     justify-content: space-between;
     align-items: center;
     padding: 10px 25px;
     width: calc(100% - 50px);
-    background-color: #ffffff; /* Optional: add background color */
-    border-top: 1px solid #dddddd; /* Optional: add border top */
-    margin-bottom: 45px; /* Height of the navigation bar */
+    background-color: #ffffff;
+    border-top: 1px solid #dddddd;
+    margin-bottom: 45px;
 }
 
 
