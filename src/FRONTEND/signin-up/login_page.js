@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./signin-up_css/login.css";
 import { useNavigate } from 'react-router-dom';
 import { FaFacebookF, FaGoogle, FaApple, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
@@ -14,6 +14,15 @@ function Login() {
   const [message, setMessage] = useState(null);
   const [isMessageDialogDisplayed, setIsMessageDialogDisplayed] = useState(false); // Track if the message dialog is displayed
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (message && message.success) {
+      setIsMessageDialogDisplayed(true); // Show message dialog
+      setTimeout(() => {
+        navigate('/home');
+      }, 2000); // Navigate to home page after 2 seconds
+    }
+  }, [message, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,16 +40,10 @@ function Login() {
     e.preventDefault();
     try {
       const response = await api.post(`/client/login`, formData);
-      setMessage(response.data.message); // Set message from response
-      if (response.data.success) {
-        setIsMessageDialogDisplayed(true); // Show message dialog
-        setTimeout(() => {
-          navigate('/home');
-        }, 2000); // Navigate to home page after 2 seconds
-      }
+      setMessage(response.data); // Set message from response
     } catch (error) {
       console.error('Error:', error);
-      setMessage(error.code + ' : ' + error.message); // Set error message
+      setMessage({ message: error.code + ' : ' + error.message, success: false }); // Set error message
     }
   };
 
@@ -127,7 +130,7 @@ function Login() {
       {message && (
         <div className="message-dialog">
           <div className="message-content">
-            <p>{message}</p>
+            <p>{message.message}</p>
           </div>
         </div>
       )}
