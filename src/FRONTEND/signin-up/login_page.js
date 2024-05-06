@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import "./signin-up_css/login.css";
 import { useNavigate } from 'react-router-dom';
 import { FaFacebookF, FaGoogle, FaApple, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Logo from "../image/favicon.png";
 import api from '../../api.js';
+import axios from "axios";
+
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,11 +14,8 @@ function Login() {
     email: "", 
     password: ""
   });
-  const [message, setMessage] = useState(null);
-  const [isMessageDialogDisplayed, setIsMessageDialogDisplayed] = useState(false); // Track if the message dialog is displayed
   const navigate = useNavigate();
 
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -31,25 +31,19 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('form:', formData);
       const response = await api.post(`/client/login`, formData);
-      setMessage(response.data); // Set message from response
+      alert(response.data.message); // Log response message
+      navigate('/home')
     } catch (error) {
       console.error('Error:', error);
-      setMessage({ message: error.code + ' : ' + error.message, success: false }); // Set error message
+      alert(error.code + ' : ' + error.message);
+
     }
   };
-
-  useEffect(() => {
-    if (message && message.success) {
-      navigate('/home'); // Navigate to home page if login is successful
-    }
-  }, [message, navigate]);
-
-  
-
   return (
     <>
-      <div className={`login ${isMessageDialogDisplayed ? 'message-dialog-displayed' : ''}`}>
+      <div className="login">
         <div className="top_login">
           <h1 className="logo_name">
             <img className="logo" src={Logo} alt="Kindred Logo" />
@@ -122,18 +116,6 @@ function Login() {
           </form>
         </div>
       </div>
-
-      {/* Message dialog */}
-      {message && (
-        <div className="overlay"></div>
-      )}
-      {message && (
-        <div className="message-dialog">
-          <div className="message-content">
-            <p>{message.message}</p>
-          </div>
-        </div>
-      )}
     </>
   );
 }
