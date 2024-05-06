@@ -38,14 +38,17 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form Data:', formData); // Log form data
     try {
       const response = await api.post(`/client/login`, formData);
+      console.log("Response:", response.data); // Check response data
       setMessage(response.data); // Set message from response
     } catch (error) {
       console.error('Error:', error);
       setMessage({ message: error.code + ' : ' + error.message, success: false }); // Set error message
     }
   };
+  
 
   return (
     <>
