@@ -164,12 +164,19 @@ app.post('/api/review/new', authenticateToken, async (req, res) => {
   }
 });
 app.post('/api/appointment/new', authenticateToken, async (req, res) => {
+  console.log('Request body:', req.body); // Log the body of the request
+  console.log('Authorization header:', req.headers['authorization']); // Log the auth header
+
   try {
     const newAppointment = new Appointment(req.body);
 
     const client = await Client.findById(newAppointment.clientID);
-
     const caregiver = await Caregiver.findById(newAppointment.caregiverID);
+
+
+    console.log('Client:', client ? `Found: ${client._id}` : 'Not found');
+    console.log('Caregiver:', caregiver ? `Found: ${caregiver._id}` : 'Not found');
+
 
     if (!client || !caregiver) {
       return res.status(404).json({ error: 'Client or Caregiver not found' });
@@ -387,13 +394,19 @@ app.post('/api/caregiver/increment-patients/:name', async (req, res) => {
 
 //Authenticate Token
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (token == null) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(401);
-    req.user = user;
-    next();
-  })
+  function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    console.log('Received token:', token); // Debug log
+  
+    if (token == null) return res.sendStatus(401);
+  
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      console.log('JWT Verify Error:', err); // More detailed error logging
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+  }
 }
