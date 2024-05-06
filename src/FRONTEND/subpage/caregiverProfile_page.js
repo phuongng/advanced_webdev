@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from "../components/navbar";
 import { FaStar, FaUser, FaCalendarCheck} from "react-icons/fa";
-
 import { RiMessage2Fill } from "react-icons/ri";
 import { IoIosMail } from "react-icons/io";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
@@ -10,12 +9,18 @@ import api from '../../api.js';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-function CaregiverProfile() {
+function CaregiverProfile({ caregiverEmail })  {
     const { fullname } = useParams();
     const [caregiverData, setCaregiverData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const sendEmail = (caregiverName, caregiverEmail) => {
+        const subject = `Message for ${caregiverName}`;
+        const body = 'Write your message here...';
+        const mailtoLink = `mailto:${caregiverEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoLink;
+    };
     useEffect(() => {
         setLoading(true);
         setError(null);
@@ -136,7 +141,10 @@ function CaregiverProfile() {
                     <h3>Contact Me</h3>
 
                     <div className='contactme-icons-container'>
-                    <IoIosMail className='profile-5-icon'/>
+                    <IoIosMail
+                        className="profile-5-icon"
+                        onClick={() => sendEmail(caregiverName, caregiverEmail)}
+                    />
 
                     <Link to={`/message?receiver=${encodeURIComponent(caregiverName)}&receiverImage=${encodeURIComponent(image)}`}>
                         <IoChatboxEllipsesOutline className='profile-5-icon' />
