@@ -20,7 +20,7 @@ function Login() {
       setIsMessageDialogDisplayed(true); // Show message dialog
       setTimeout(() => {
         navigate('/home');
-      }, 2000); // Navigate to home page after 2 seconds
+      }, 500); // Navigate to home page after 2 seconds
     }
   }, [message, navigate]);
 
