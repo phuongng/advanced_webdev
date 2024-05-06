@@ -73,11 +73,11 @@ function Scheduling() {
 				</div> */}
 			</div>
 			
-		</div>
+		</div >
 
 
 			<div className="button-container">
-			<button className="schedule-button"><a href="/caregiver">Check available caregivers</a></button>
+			<button className="big-button"><a href="/caregiver">Check available caregivers</a></button>
 			</div>
 	</div>
 	

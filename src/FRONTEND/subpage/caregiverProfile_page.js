@@ -54,11 +54,8 @@ function CaregiverProfile() {
         year_experience: yearsExperience,
         about_me: aboutMe,
         skills: servicesOffered,
-        //image
+        img: image
     } = caregiverData.caregiver;
-
-    //TODO add these to the caregiver?
-    var image;
 
     return (
         <>
@@ -67,7 +64,7 @@ function CaregiverProfile() {
                 <div className="caregiver-profile-1">
                     <div className='caregiverProfile-image-container'>
                         {/* Assuming caregiverData has an image URL property */}
-                        <img className="caregiverProfiler-image" src={image} alt="Caregiver Profile" />
+                        <img className="caregiverProfile-image" src={`/images/${image}`} alt="Caregiver Profile" />
                     </div>
                 
                     <div className="caregiver-name">
@@ -80,6 +77,7 @@ function CaregiverProfile() {
                     </div>
                 </div>
 
+<hr className='horizontalLine'></hr>
                 <div className="caregiver-profile-2">
                     <div className="caregiver-profile-2-container" >
                         <div className="profile-2-icon-container"> 
@@ -117,12 +115,12 @@ function CaregiverProfile() {
                         <p>Reviews</p>
                     </div>  
                 </div>
-                
+                <hr className='horizontalLine'></hr>      
                 <div className="caregiver-profile-3">
-                    <h2>About me</h2>
+                    <h3>About me</h3>
                     <p>{aboutMe}</p>
                 </div>
-
+                <hr className='horizontalLine'></hr>
                 <div className="caregiver-profile-4">
                     <h3>Services Offered</h3>
                     <div className="service-list">
@@ -131,11 +129,14 @@ function CaregiverProfile() {
                         ))}
                     </div>
                 </div>
-
-                <div>
-                    <Link to={`/booking?caregiverName=${encodeURIComponent(caregiverName)}`} className="big-button">
-                        Schedule Services
+                <hr className='horizontalLine'></hr>
+                <div  className="button-container" >
+                    <button className="big-button">
+                    <Link to={`/booking?caregiverName=${encodeURIComponent(caregiverName)}`} >
+                    Schedule Services  
                     </Link>
+                    </button>
+                   
                 </div>
             </div>
         </>

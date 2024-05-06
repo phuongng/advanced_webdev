@@ -10,7 +10,7 @@ span {
     display: flex;
     flex-direction: column;
     background-color: #f7f9fb;
-    padding-bottom: 40px;
+    padding-bottom: 60px;
   }
   
   .dashboard-notification {
