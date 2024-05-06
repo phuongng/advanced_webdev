@@ -39,7 +39,9 @@ function Message() {
 			
 		<div className="message-receiver-info-container">
 		<div className="receiver-img-container">
-			<img src={receiverImage} className="receiver-img" alt="Receiver" />
+			<img src={receiverImage} className="receiver-img" alt="Receiver" 
+			style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #fff', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}
+			/>
 		</div>
 
 			<div className="message-receiver-info">

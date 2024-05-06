@@ -10,7 +10,7 @@ import Login from "../src/FRONTEND/signin-up/login_page";
 import Message from '../src/FRONTEND/navbar/message_page';
 import Scheduling from '../src/FRONTEND/navbar/scheduling_page';
 import User_dashboard from './FRONTEND/navbar/user-dashboard_page';
-
+import MessageHistoryPage from './FRONTEND/navbar/message-history';
 // Import navbar
 import Navbar from '../src/FRONTEND/components/navbar';
 
@@ -33,6 +33,7 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/scheduling" element={<Scheduling />} />
           <Route path="/user-dashboard" element={<User_dashboard/>} />
+          <Route path="/message-history" element={<MessageHistoryPage />} />
 
 
           <Route path="/navbar" element={<Navbar />} />
