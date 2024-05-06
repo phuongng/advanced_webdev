@@ -12,6 +12,7 @@ function Login() {
     password: ""
   });
   const [message, setMessage] = useState(null);
+  const [isMessageDialogDisplayed, setIsMessageDialogDisplayed] = useState(false); // Track if the message dialog is displayed
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,9 +33,10 @@ function Login() {
       const response = await api.post(`/client/login`, formData);
       setMessage(response.data.message); // Set message from response
       if (response.data.success) {
+        setIsMessageDialogDisplayed(true); // Show message dialog
         setTimeout(() => {
           navigate('/home');
-        }, 1000); // Navigate to home page after 2 seconds
+        }, 2000); // Navigate to home page after 2 seconds
       }
     } catch (error) {
       console.error('Error:', error);
@@ -44,7 +46,7 @@ function Login() {
 
   return (
     <>
-      <div className="login">
+      <div className={`login ${isMessageDialogDisplayed ? 'message-dialog-displayed' : ''}`}>
         <div className="top_login">
           <h1 className="logo_name">
             <img className="logo" src={Logo} alt="Kindred Logo" />
@@ -119,6 +121,9 @@ function Login() {
       </div>
 
       {/* Message dialog */}
+      {message && (
+        <div className="overlay"></div>
+      )}
       {message && (
         <div className="message-dialog">
           <div className="message-content">

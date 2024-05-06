@@ -169,39 +169,54 @@
     width: 20px;
     height: 20px;
   }
-  
 
-  /* login.css */
-/* Your existing styles */
+  /* Overlay for blurring background */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    backdrop-filter: blur(5px); /* Apply blur effect to background */
+    z-index: 9998; /* Ensure the overlay is behind the message dialog */
+    pointer-events: auto; /* Enable pointer events to intercept clicks */
+}
 
+/* Message dialog */
 .message-dialog {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 20px;
+    padding: 50px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 90%;
-    width: 300px; /* Adjust width as needed */
-    z-index: 9999;
-  }
-  
-  .message-content {
+    width: 300px;
+    z-index: 9999; /* Ensure message dialog appears on top of overlay */
+    font-size: 14px;
+}
+
+.message-content {
     text-align: center;
-  }
-  
-  .message-content p {
+}
+
+.message-content p {
     margin-bottom: 10px;
-  }
-  
-  .message-content button {
+}
+
+.message-content button {
     padding: 5px 10px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
+}
+
+/* Disable pointer events for underlying content when message dialog is displayed */
+.message-dialog-displayed .login-content {
+    pointer-events: none;
+}
