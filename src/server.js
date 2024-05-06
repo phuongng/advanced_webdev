@@ -394,19 +394,17 @@ app.post('/api/caregiver/increment-patients/:name', async (req, res) => {
 
 //Authenticate Token
 function authenticateToken(req, res, next) {
-  function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    
-    console.log('Received token:', token); // Debug log
-  
-    if (token == null) return res.sendStatus(401);
-  
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-      console.log('JWT Verify Error:', err); // More detailed error logging
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      next();
-    });
-  }
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  console.log('Received token:', token); // Debug log
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    console.log('JWT Verify Error:', err); // More detailed error logging
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
 }
