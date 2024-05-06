@@ -54,11 +54,8 @@ function CaregiverProfile() {
         year_experience: yearsExperience,
         about_me: aboutMe,
         skills: servicesOffered,
-        //image
+        img: image
     } = caregiverData.caregiver;
-
-    //TODO add these to the caregiver?
-    var image;
 
     return (
         <>
@@ -67,7 +64,7 @@ function CaregiverProfile() {
                 <div className="caregiver-profile-1">
                     <div className='caregiverProfile-image-container'>
                         {/* Assuming caregiverData has an image URL property */}
-                        <img className="caregiverProfiler-image" src={image} alt="Caregiver Profile" />
+                        <img className="caregiverProfile-image" src={`/images/${image}`} alt="Caregiver Profile" />
                     </div>
                 
                     <div className="caregiver-name">
