@@ -34,7 +34,7 @@ function Login() {
       if (response.data.success) {
         setTimeout(() => {
           navigate('/home');
-        }, 2000); // Navigate to home page after 2 seconds
+        }, 1000); // Navigate to home page after 2 seconds
       }
     } catch (error) {
       console.error('Error:', error);
