@@ -268,7 +268,7 @@ function Booking() {
 
                 <div className="button-container">
                     <button className="big-button" onClick={handleConfirmBooking}>
-                    <Link to={`/confirmation?caregiverName=${caregiverName}`} className="big-button">
+                    <Link to={`/confirmation?caregiverName=${caregiverName}`} >
             Confirm Booking
         </Link>
                     </button>
