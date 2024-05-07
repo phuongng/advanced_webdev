@@ -36,7 +36,8 @@ function Login() {
       navigate('/home')
     } catch (error) {
       console.error('Error:', error);
-      alert(error.code + ' : ' + error.message);
+      alert(error.response.data.message);
+      //alert(error.code + ' : ' + error.message);
 
     }
   };
