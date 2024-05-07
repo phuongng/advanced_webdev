@@ -1,0 +1,44 @@
+.message-history {
+    padding: 20px;
+  }
+  
+.message-history h3{
+    text-align: left;
+}
+
+.message-receiver-name p{
+    text-align: left;
+}
+
+
+  .message-list {
+    margin-top: 20px;
+  }
+  
+  .message-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .message-item p {
+    /* margin: 5px 0; */
+   
+  }
+  
+  .message-item p:first-child {
+    font-weight: bold;
+  }
+  
+  .message-item p:nth-child(even) {
+    font-style: italic;
+    font-size: 10px;
+  }
+  
+  .message-item p:last-child {
+    margin-bottom: 0;
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+ 

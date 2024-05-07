@@ -25,7 +25,7 @@ const Navbar = () => {
             <FaRegCalendarAlt className="menu-icon" />
             </NavLink>
 
-            <NavLink to="/message">
+            <NavLink to="/message-history">
             <RiMessage2Line className="menu-icon home-icon"/>
             </NavLink>
 

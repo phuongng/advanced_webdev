@@ -3,12 +3,13 @@ import "./navbar_css/message.css";
 import Navbar from "../components/navbar";
 import { FaPhone } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
+import { useLocation } from 'react-router-dom';
 
 function Message() {
-  const [receiver] = useState({
-    name: "John Doe",
-    title: "Caregiver"
-  });
+	const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const receiverName = searchParams.get('receiver');
+    const receiverImage = searchParams.get('receiverImage');
 
   const currentDay = new Date().toLocaleDateString();
   const [messages, setMessages] = useState([]);
@@ -37,14 +38,17 @@ function Message() {
 	  <div className="message">
 			
 		<div className="message-receiver-info-container">
-			<div className="receiver-img-container">
-			<img src="" className="receiver-img" alt="Receiver"></img>
-			</div>
+		<div className="receiver-img-container">
+			<img src={receiverImage} className="receiver-img" alt="Receiver" 
+			style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #fff', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}
+			/>
+		</div>
+
 			<div className="message-receiver-info">
 			<p>
-				<b>Chat with <span>{receiver.name}</span></b>	
+			<b>Chat with {receiverName}</b>
 			</p>
-			<p>{receiver.title}</p>
+			
 			</div>
 			<div>
 			<FaPhone />

@@ -1,7 +1,7 @@
 .message{
     height: 100vh;
     overflow-y: auto;
-    padding-bottom: 40px;
+    padding-bottom: 60px;
     display: flex;
     flex-direction: column;
     background-color: #F7F9FB;
@@ -12,28 +12,27 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 25px; 
-    height: 60px;
 }
 
 .message-receiver-info{
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 15px 15px 5px;
 
 }
-.receiver-img-container{
-    height: 60px;
-}
+
 
 .receiver-img{
     width: 50px;
     height: 50px;
-    background-color: #687864;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.receiver-img-container img{
-    border-radius: 50%;
-}
+
 
 .horizontal-line-msg{
     border-bottom: 0.5px solid  #F7F9FB;
@@ -44,17 +43,21 @@
     border: none;
     width: calc(100% - 60px);
 }
-
-.message-input{
+.message-input {
     display: flex;
     flex-direction: row;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     justify-content: space-between;
     align-items: center;
-    padding: 25px;
+    padding: 10px 25px;
     width: calc(100% - 50px);
+    background-color: #ffffff;
+    border-top: 1px solid #dddddd;
+    margin-bottom: 45px;
 }
+
+
 
 .send-icon{
     height: 30px;
